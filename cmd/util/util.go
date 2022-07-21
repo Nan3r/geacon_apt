@@ -19,7 +19,11 @@ func DebugError() {
 
 
 func NetbiosEncode(data []byte) string{
-
+   q := ""
+   for _,value := range data{
+        q += string((int(value)>>4) + int('a'))+string((int(value)&0xf + int('a')))
+   }
+    return q
 }
 
 func ParseResponse(data string) string{
@@ -37,5 +41,18 @@ func ParseResponse(data string) string{
 }
 
 func NetbiosDecode(data string) []byte{
-
+    c := 0
+    a := 0
+    resa := []byte{}
+   for index,value := range data{
+       //fmt.Println(int(value))
+        if ((index+1) % 2 == 0){
+            c = (int(value)-int('a')) &0xf
+            a += c 
+           resa = append(resa, byte(a))
+        }else{
+           a = (int(value)-int('a')) << 4 
+        }
+   }
+   return resa
 }
